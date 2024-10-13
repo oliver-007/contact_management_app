@@ -12,7 +12,7 @@ const Navbar = () => {
     <div className=" bg-zinc-500 py-4 flex items-center justify-around z-50 top-0 sticky ">
       <p
         onClick={handleLogoClick}
-        className="text-2xl text-white font-bold tracking-widest"
+        className="text-2xl text-white font-bold tracking-widest cursor-pointer "
       >
         CMA
       </p>
