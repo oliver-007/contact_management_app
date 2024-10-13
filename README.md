@@ -1,4 +1,4 @@
-# contact_management_app
+# Contacts_Management_App
 
 ## A contacts management application with CRUD operation
 
