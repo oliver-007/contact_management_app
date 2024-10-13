@@ -7,6 +7,8 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { useDeleteContactMutation } from "../RTK/slices/API/cmaApiSlice";
 import Loader from "../modals/Loader";
 import EditModal from "../modals/EditModal";
+import { useAppDispatch } from "../RTK/store/store";
+import { setMessage } from "../RTK/slices/respMessageSlice";
 
 interface IContactCardProps {
   singleContact: IContact;
@@ -17,6 +19,7 @@ const ContactCard: React.FC<IContactCardProps> = ({ singleContact }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const optionRef = useRef<HTMLDivElement>(null);
+  const dispatch = useAppDispatch();
 
   const [
     deleteContactMutation,
@@ -26,6 +29,20 @@ const ContactCard: React.FC<IContactCardProps> = ({ singleContact }) => {
       isLoading: deleteContactMutationLoading,
     },
   ] = useDeleteContactMutation();
+
+  // -------- SET DELETE RESPONSE MESSAGE ---------
+  useEffect(() => {
+    deleteContactMutationData &&
+      dispatch(setMessage(deleteContactMutationData.message));
+
+    deleteContactMutationError &&
+      dispatch(
+        setMessage(
+          // @ts-ignore
+          deleteContactMutationError.data.message
+        )
+      );
+  }, [deleteContactMutationData, deleteContactMutationError]);
 
   // console.log(
   //   "deleteContactMutationData from ContactCard --------- ",
