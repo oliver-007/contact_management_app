@@ -135,7 +135,7 @@ const ContactCard: React.FC<IContactCardProps> = ({ singleContact }) => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full sm:flex-row shadow-md shadow-pink-400 rounded-md px-3 sm:px-10 max-w-[700px] py-3 gap-x-5 relative ">
+    <div className="flex flex-col items-center w-full sm:flex-row shadow-md shadow-pink-400 rounded-md px-3 sm:px-10 max-w-[700px] py-3 gap-y-5 sm:gap-x-5 relative ">
       <img
         src={avatar}
         alt="name"
