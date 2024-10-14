@@ -7,6 +7,7 @@ export interface IFormInput {
 }
 
 export interface IContact {
+  isFavorite: boolean;
   avatar: string;
   createdAt: string;
   updatadAt: string;

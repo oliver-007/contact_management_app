@@ -1,10 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import { IContact } from "../types";
 import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
 import { GiTireIronCross } from "react-icons/gi";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBinLine } from "react-icons/ri";
-import { useDeleteContactMutation } from "../RTK/slices/API/cmaApiSlice";
+import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
+
+import { IContact } from "../types";
+import {
+  useDeleteContactMutation,
+  useFavoriteToggleMutation,
+} from "../RTK/slices/API/cmaApiSlice";
 import Loader from "../modals/Loader";
 import EditModal from "../modals/EditModal";
 import { useAppDispatch } from "../RTK/store/store";
@@ -17,10 +22,36 @@ interface IContactCardProps {
 const ContactCard: React.FC<IContactCardProps> = ({ singleContact }) => {
   const { name, address, email, avatar, phoneNumber } = singleContact;
   const [showOptions, setShowOptions] = useState(false);
+  const [favState, setFavState] = useState(singleContact.isFavorite);
   const [showModal, setShowModal] = useState(false);
   const optionRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
 
+  // console.log("singleContact", singleContact);
+
+  // ---------- FAVORITE-TOGGLE RTK-MUTATION HOOK --------------
+  const [
+    favoriteToggleMutation,
+    { data: favoriteToggleMutationData, error: favoriteToggleMutationError },
+  ] = useFavoriteToggleMutation();
+
+  // console.log(favoriteToggleMutationData);
+
+  // ------------ SET RESPONSE MESSAGE OF  favoriteToggleMutation() -------------
+  useEffect(() => {
+    favoriteToggleMutationData &&
+      dispatch(setMessage(favoriteToggleMutationData.message));
+
+    favoriteToggleMutationError &&
+      dispatch(
+        setMessage(
+          // @ts-ignore
+          favoriteToggleMutationError.data.message
+        )
+      );
+  }, [favoriteToggleMutationData, favoriteToggleMutationError]);
+
+  // ----------- DELETE RTK-MUTATION HOOK -----------
   const [
     deleteContactMutation,
     {
@@ -97,8 +128,14 @@ const ContactCard: React.FC<IContactCardProps> = ({ singleContact }) => {
     window.location.reload();
   };
 
+  // ---------- HANDLE FAVORITE-TOGGLE FUNC ------------
+  const handleFavoriteToggle = async () => {
+    setFavState((prevState) => !prevState);
+    await favoriteToggleMutation(singleContact._id);
+  };
+
   return (
-    <div className="flex items-center shadow-md shadow-pink-400 rounded-md px-3 sm:px-10  py-3 gap-x-5 max-w-[900px] relative ">
+    <div className="flex flex-col items-center w-full sm:flex-row shadow-md shadow-pink-400 rounded-md px-3 sm:px-10 max-w-[700px] py-3 gap-x-5 relative ">
       <img
         src={avatar}
         alt="name"
@@ -151,6 +188,14 @@ const ContactCard: React.FC<IContactCardProps> = ({ singleContact }) => {
             </div>
           )}
         </div>
+      </div>
+
+      {/* --------- FAVORITE TOGGLE ICON ---------- */}
+      <div
+        onClick={handleFavoriteToggle}
+        className="absolute right-3 sm:bottom-3 top-16 size-8 flex items-center justify-center    duration-300 rounded-full  p-1 cursor-pointer "
+      >
+        {favState ? <MdFavorite /> : <MdFavoriteBorder />}
       </div>
 
       {deleteContactMutationLoading && (

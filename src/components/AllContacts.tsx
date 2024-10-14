@@ -41,7 +41,7 @@ const AllContacts = () => {
   }, [getAllContactsQueryData, getAllContactsQueryError]);
 
   return (
-    <div className="space-y-5 px-5 ">
+    <div className="space-y-5 px-5 w-full flex flex-col items-center justify-center ">
       <div className="flex items-center justify-center my-5 gap-x-5 rounded-md ">
         <h3 className="text-zinc-700 font-semibold text-lg tracking-widest ">
           All Contacts

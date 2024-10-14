@@ -37,6 +37,14 @@ export const cmaApiSlice = createApi({
     getAllContacts: builder.query({
       query: () => "/api/v1/contacts",
     }),
+
+    // --------- FAVORITE TOGGLE ----------
+    favoriteToggle: builder.mutation({
+      query: (cId) => ({
+        url: `/api/v1/contacts/favorite-toggle?cId=${cId}`,
+        method: "PATCH",
+      }),
+    }),
   }),
 });
 
@@ -46,4 +54,5 @@ export const {
   useUpdateContactInfoMutation,
   useDeleteContactMutation,
   useGetAllContactsQuery,
+  useFavoriteToggleMutation,
 } = cmaApiSlice;
