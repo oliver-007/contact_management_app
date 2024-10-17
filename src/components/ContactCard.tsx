@@ -3,7 +3,11 @@ import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
 import { GiTireIronCross } from "react-icons/gi";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBinLine } from "react-icons/ri";
+import { GrDrag } from "react-icons/gr";
+
 import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 import { IContact } from "../types";
 import {
@@ -26,6 +30,14 @@ const ContactCard: React.FC<IContactCardProps> = ({ singleContact }) => {
   const [showModal, setShowModal] = useState(false);
   const optionRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
+
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: singleContact._id });
+
+  const style = {
+    transition,
+    transform: CSS.Transform.toString(transform),
+  };
 
   // console.log("singleContact", singleContact);
 
@@ -125,7 +137,10 @@ const ContactCard: React.FC<IContactCardProps> = ({ singleContact }) => {
 
     await deleteContactMutation(singleContact._id);
     setShowOptions(false);
-    window.location.reload();
+    const timer = setTimeout(() => {
+      window.location.reload();
+    }, 6000);
+    return () => clearTimeout(timer);
   };
 
   // ---------- HANDLE FAVORITE-TOGGLE FUNC ------------
@@ -135,7 +150,20 @@ const ContactCard: React.FC<IContactCardProps> = ({ singleContact }) => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full sm:flex-row shadow-md shadow-pink-400 rounded-md px-3 sm:px-10 max-w-[700px] py-3 gap-y-5 sm:gap-x-5 relative ">
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="flex flex-col items-center justify-center w-full sm:flex-row shadow-md shadow-pink-400 rounded-md px-3 sm:px-10 max-w-[700px] py-3 gap-y-5 sm:gap-x-5 relative touch-none"
+    >
+      <button
+        {...attributes}
+        {...listeners}
+        type="button"
+        className="cursor-move p-1 absolute -left-8 "
+      >
+        <GrDrag />
+      </button>
+
       <img
         src={avatar}
         alt="name"

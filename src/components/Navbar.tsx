@@ -18,6 +18,9 @@ const Navbar = () => {
       </p>
       <div className=" uppercase text-white text-sm flex items-center gap-x-10 ">
         <NavLink
+          onClick={() => {
+            navigate("/"), window.location.reload();
+          }}
           className={({ isActive }) =>
             `pt-2 pb-1 ${isActive ? "border-b border-lime-500 " : ""} `
           }

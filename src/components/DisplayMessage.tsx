@@ -1,46 +1,53 @@
 import { useEffect, useState } from "react";
+import { IoCloseSharp } from "react-icons/io5";
 
 import { useAppDispatch, useAppSelector } from "../RTK/store/store";
 import { setMessage } from "../RTK/slices/respMessageSlice";
-import { CSSTransition } from "react-transition-group";
 
 const DisplayMessage = () => {
   const responseMessage = useAppSelector((state) => state.responseMessage);
   const dispatch = useAppDispatch();
-  const [showMessage, setShowMessage] = useState(false);
+  const [isShowMessage, setIsShowMessage] = useState(false);
 
   // Show message when there's a new response
   useEffect(() => {
-    if (responseMessage) {
-      setShowMessage(true);
-      const timer = setTimeout(() => {
-        setShowMessage(false); // Start hiding the message after 5 seconds
-        dispatch(setMessage(""));
-      }, 5000);
-      return () => clearTimeout(timer);
-    }
+    setIsShowMessage(true);
+    // First timer to hide the message after 5 seconds
+    const timer = setTimeout(() => {
+      setIsShowMessage(false); // Triggers fade out animation
+      // Second timer to dispatch and reset message after fade out completes
+      const fadingOutTimer = setTimeout(() => {
+        dispatch(setMessage("")); // Clear the message from state
+      }, 500); // Adjust this to match the duration of your fade-out animation
+      return () => clearTimeout(fadingOutTimer);
+    }, 5000); // Message is visible for 5 seconds
+    return () => clearTimeout(timer); // Cleanup the timer
   }, [responseMessage, dispatch]);
 
+  // -------- HANDLE CLOSE POP-UP MESSAGE --------
+  const handleClose = () => {
+    setIsShowMessage(false); // Triggers fade out animation
+    const timer = setTimeout(() => {
+      dispatch(setMessage("")); // Clear the message from state
+    }, 500); // Adjust this to match the duration of your fade-out animation
+    return () => clearTimeout(timer);
+  };
+
   return (
-    <CSSTransition
-      in={showMessage}
-      timeout={300}
-      classNames={{
-        enter: "opacity-0 -translate-x-full", // Initial state before the transition starts
-        enterActive: "opacity-100 translate-x-0 transition-all duration-300", // State when the element is transitioning in
-        exit: "opacity-100 translate-x-0", // Final state before the exit transition starts
-        exitActive: "opacity-0 -translate-x-full transition-all duration-300", // State when the element is transitioning out
-      }}
-      unmountOnExit
+    <div
+      className={` bottom-10 left-6 fixed z-50 ${
+        isShowMessage ? "animate-fadeinleft" : "animate-fadeoutleft"
+      }`}
     >
-      <div className={` bottom-10 left-6 fixed z-50 `}>
-        <div
-          className={`flex items-center bg-zinc-800 text-yellow-400 dark:bg-yellow-400 dark:text-zinc-800 rounded-lg px-3 py-2 text-[11px] font-semibold sm:text-base gap-x-6 `}
-        >
-          <p className=""> {responseMessage} </p>
-        </div>
+      <div
+        className={`flex items-center bg-zinc-800 text-yellow-400 rounded-lg px-3 py-2 text-[11px] font-semibold sm:text-base gap-x-6 `}
+      >
+        <p> {responseMessage} </p>
+        <button onClick={handleClose} className=" p-0.5">
+          <IoCloseSharp size={20} />
+        </button>
       </div>
-    </CSSTransition>
+    </div>
   );
 };
 
