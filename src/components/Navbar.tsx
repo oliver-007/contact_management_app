@@ -9,7 +9,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className=" bg-zinc-500 py-4 flex items-center justify-around z-50 top-0 sticky ">
+    <div className=" bg-zinc-500 py-4 flex items-center justify-around z-50 top-0 sticky h-[50px] ">
       <p
         onClick={handleLogoClick}
         className="text-2xl text-white font-bold tracking-widest cursor-pointer "

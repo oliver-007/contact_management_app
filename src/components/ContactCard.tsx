@@ -153,7 +153,7 @@ const ContactCard: React.FC<IContactCardProps> = ({ singleContact }) => {
     <div
       ref={setNodeRef}
       style={style}
-      className="flex flex-col items-center justify-center w-full sm:flex-row shadow-md shadow-pink-400 rounded-md px-3 sm:px-10 max-w-[700px] py-3 gap-y-5 sm:gap-x-5 relative touch-none"
+      className="flex flex-col items-center justify-center w-full sm:flex-row sm:justify-start shadow-md shadow-pink-400 rounded-md px-3 sm:px-10 max-w-[700px] py-3 gap-y-5 sm:gap-x-5 relative touch-none"
     >
       <button
         {...attributes}

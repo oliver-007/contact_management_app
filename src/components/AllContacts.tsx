@@ -118,7 +118,7 @@ const AllContacts = () => {
           collisionDetection={closestCorners}
           onDragEnd={handleDragEnd}
         >
-          <div className="px-10 py-5 border border-zinc-300 rounded-md space-y-5  ">
+          <div className="px-16 py-5 border h-[calc(100vh-120px)] overflow-auto border-zinc-300 rounded-md space-y-5  ">
             <SortableContext
               items={allContacts.map((singleContact) => singleContact._id)}
               strategy={verticalListSortingStrategy}
